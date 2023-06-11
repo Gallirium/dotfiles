@@ -1,0 +1,83 @@
+;variables
+(defpoll time_hour :interval '5s' 'date +%H')
+(defpoll time_minute :interval '10s' 'date +%M')
+(defpoll datevar :interval '2h' 'date +%x')
+(defpoll batvar :interval '1m' 'cat /sys/class/power_supply/BAT0/capacity')
+
+(defpoll brightvar :interval '5s' '~/.config/eww/bright.sh')
+(defpoll volvar :interval '5s' `amixer sget Master | grep 'Right:' | awk -F'[][%]' '{ print $2 }'`)
+
+; window and widget definitions
+(defwindow win_mainwin
+           :class 'mainwin'
+           :monitor 0
+           :geometry (geometry :x "2%"
+                               :y "-2%"
+                               :width "150px"
+                               :height "120px"
+                               :anchor "bottom left")
+           :stacking "bg"
+           :wm-ignore false
+    (widget_background)
+)
+
+(defwidget widget_background [] (box :class 'background' :orientation "h" :spacing 10 :space-evenly true
+    (box :class 'time_container' :orientation 'h' :space-evenly false
+    (widget_timedate))
+    (box :class 'controls_container' :orientation 'h' :space-evenly false
+    (widget_controls :brightvar brightvar :volvar volvar))
+    )
+  )
+
+(defwidget widget_timedate []
+  (box :orientation "v" :space-evenly false
+  (box   :class 'timehour'
+         :height 9
+         :width 7
+         :orientation 'v'
+         :halign "start"
+         :valign "start"
+          (label :text time_hour)
+   )
+  (box   :class 'timemin'
+         :height 9
+         :width 7
+         :orientation 'v'
+         :halign "start"
+         :valign "start"
+          (label :text time_minute)
+   )
+  (box :class 'actualdate'
+       :height 1
+       :width 1
+       :orientation "h"
+       :halign "start"
+       :valign "end"
+    (label :text datevar)
+    )
+  )
+)
+
+(defwidget widget_controls [brightvar volvar] 
+  (box :orientation "v" :space-evenly true :height 120 :width 60  :halign "center" :valign "center"
+  (eventbox   :class 'scroll'
+         :height 50
+         :width 50
+         :orientation 'h'
+         :halign "center"
+         :valign "center"
+         :onscroll "if [ '{}' == up ];then amixer set Master 5%+;eww update volvar=`amixer sget Master | grep 'Right:' | awk -F'[][%]' '{ print $2 }'`;else amixer set Master 5%-;eww update volvar=`amixer sget Master | grep 'Right:' | awk -F'[][%]' '{ print $2 }'`; fi"
+          (circular-progress :value volvar :thickness 5)
+  )
+  (eventbox   :class 'scroll'
+         :height 50
+         :width 50
+         :orientation 'h'
+         :halign "center"
+         :valign "center"
+         ;:onscroll "if [ '{}' == up ]; then echo '{}' ;fi" 
+         :onscroll "if [ '{}' == up ]; then brightnessctl -q sset 5%+;eww update brightvar=`brightnessctl -m|awk -F, '{print $4}'|tr -d %`;else brightnessctl -q sset 5%-;eww update brightvar=`brightnessctl -m|awk -F, '{print $4}'|tr -d %`; fi"
+          (circular-progress :value brightvar :thickness 5)
+   )
+  )
+)

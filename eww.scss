@@ -1,0 +1,56 @@
+* {
+	all:unset;
+}
+
+
+.mainwin {
+	background-color:rgba(0,0,0,0);
+}
+
+.background {background-color: rgba(0,0,0,0); border-radius: 12px;}
+
+.time_container {
+	background-color: rgba(255,255,255,1);
+	border-radius: 6px;
+}
+
+.controls_container {
+	background-color: rgba(255,255,255,1);
+	border-radius: 6px;
+	margin-right: 30px;
+}
+
+.timehour {
+	background-color: #ffffff;
+	color: #592535;
+	margin-top: 5px;
+	padding: 0 0 0 20;
+	font-family: "Oswald Semibold";
+	font-size: 28px;
+}
+
+.timemin {
+	background-color: #ffffff;
+	color: #592535;
+	margin-top: -5px;
+	padding: 0 0 0 45;
+	font-family: "Oswald Semibold";
+	font-size: 28px;
+}
+
+.actualdate {
+	background-color: #ffffff;
+	color: #592535;
+	border-radius: 12px;
+	margin-right: 10px; 
+	padding: 0 0 0 12;
+	font-family: "Oswald ExtraLight";
+	font-size: 18px;
+}
+
+.scroll {
+	background-color: rgba(255,255,255,0);
+	border-radius: 30px;
+	color: #592535;
+	font-size: 18px;
+}
